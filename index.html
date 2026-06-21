@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solo Leveling Tracker - System Edition</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* АТМОСФЕРА СИСТЕМЫ SOLO LEVELING */
+        body {
+            background-color: #0b0c10; /* Сверхтемный стальной фон */
+            color: #c5a1ff; /* Магический фиолетовый оттенок текста */
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 20px;
+        }
+
+        h1 {
+            grid-column: span 2;
+            text-align: center;
+            color: #00edff; /* Электрический синий (цвет окон Системы) */
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #6600ff; /* Фиолетовая энергия */
+            padding-bottom: 8px;
+            text-shadow: 0 0 15px rgba(0, 237, 255, 0.6);
+            font-weight: 800;
+        }
+
+        /* ЛЕВАЯ ЧАСТЬ */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        /* Таблица задач */
+        .table-container {
+            background: #11141a;
+            border: 2px solid #6600ff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 0 15px rgba(102, 0, 255, 0.2);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: center;
+        }
+
+        th, td {
+            border: 1px solid #1f232d;
+            padding: 12px 8px;
+        }
+
+        th {
+            background-color: #161b24;
+            color: #00edff;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .task-name {
+            text-align: left;
+            font-weight: bold;
+            min-width: 180px;
+            color: #fff;
+        }
+
+        .task-reward-container {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            margin-top: 4px;
+        }
+
+        .task-reward-tag {
+            display: inline-block;
+            font-size: 11px;
+            color: #00edff;
+            font-weight: normal;
+        }
+
+        .checkbox-cell input {
+            width: 19px;
+            height: 19px;
+            cursor: pointer;
+            accent-color: #00edff;
+        }
+
+        /* Кнопки действий */
+        .action-btn {
+            background: none;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            font-weight: bold;
+            padding: 0 4px;
+        }
+        .edit-btn { color: #00edff; }
+        .edit-btn:hover { text-shadow: 0 0 8px #00edff; }
+        .delete-btn { color: #ff0055; }
+        .delete-btn:hover { color: #ff3377; text-shadow: 0 0 8px #ff0055; }
+
+        .add-task-btn {
+            background: none;
+            border: none;
+            color: #6600ff;
+            font-size: 26px;
+            cursor: pointer;
+            width: 100%;
+            padding: 8px;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .add-task-btn:hover {
+            background: #161b24;
+            color: #00edff;
+        }
+
+        /* ИНТЕРАКТИВНЫЙ КАЛЕНДАРЬ МЕСЯЦЕВ */
+        .calendar-section {
+            background: #11141a;
+            border: 2px solid #00edff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 0 15px rgba(0, 237, 255, 0.1);
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .calendar-header h3 {
+            color: #00edff;
+            font-size: 18px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 8px rgba(0, 237, 255, 0.3);
+        }
+
+        .calendar-nav-btn {
+            background: #161b24;
+            color: #00edff;
+            border: 1px solid #00edff;
+            padding: 6px 16px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 16px;
+            transition: all 0.2s;
+        }
+
+        .calendar-nav-btn:hover {
+            background: #00edff;
+            color: #0b0c10;
+            box-shadow: 0 0 10px #00edff;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            text-align: center;
+        }
+
+        .weekday-label {
+            color: #6600ff;
+            font-weight: bold;
+            font-size: 12px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #1f232d;
+        }
+
+        .calendar-day {
+            background: #161b24;
+            border: 1px solid #1f232d;
+            border-radius: 4px;
+            padding: 10px 5px;
+            min-height: 48px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            transition: all 0.2s;
+            color: #fff;
+        }
+
+        .calendar-day.empty {
+            background: transparent;
+            border: none;
+        }
+
+        .calendar-day.current-day {
+            border-color: #6600ff;
+            box-shadow: 0 0 10px rgba(102, 0, 255, 0.5);
+            background: #1d1238;
+        }
+
+        .day-status-dots {
+            display: flex;
+            gap: 3px;
+            margin-top: 4px;
+            height: 6px;
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            background-color: #00edff;
+            border-radius: 50%;
+            box-shadow: 0 0 5px #00edff;
+        }
+
+        /* ПРАВАЯ ЧАСТЬ */
+        .sidebar {
+            background: #11141a;
+            border: 2px solid #00edff;
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            box-shadow: 0 0 15px rgba(0, 237, 255, 0.1);
+        }
+
+        .sidebar-title {
+            font-size: 18px;
+            color: #00edff;
+            text-align: center;
+            font-weight: bold;
+            border-bottom: 2px dashed #1f232d;
+            padding-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .mana-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            justify-items: center;
+        }
+
+        .mana-circle-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+        }
+
+        /* КОМПАКТНАЯ СФЕРА МАНЫ (85px) */
+        .progress-circle {
+            position: relative;
+            width: 85px;
+            height: 85px;
+            border-radius: 50%;
+            background: conic-gradient(#161b24 0deg, #161b24 360deg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 6px;
+            box-shadow: 0 0 10px rgba(0, 237, 255, 0.15);
+            transition: background 0.3s ease;
+        }
+
+        .progress-circle::before {
+            content: "";
+            position: absolute;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: #11141a;
+        }
+
+        .circle-number {
+            position: relative;
+            font-size: 14px;
+            font-weight: bold;
+            color: #00edff;
+            z-index: 2;
+            text-shadow: 0 0 5px rgba(0, 240, 255, 0.6);
+        }
+
+        .circle-label {
+            font-size: 13px;
+            color: #fff;
+            font-weight: 500;
+            max-width: 240px;
+            word-wrap: break-word;
+            margin-top: 2px;
+        }
+
+        .delete-mana-btn {
+            background: none;
+            border: none;
+            color: #ff0055;
+            font-size: 11px;
+            cursor: pointer;
+            margin-top: 2px;
+            text-decoration: underline;
+            font-weight: 500;
+        }
+        .delete-mana-btn:hover {
+            color: #ff3377;
+            text-shadow: 0 0 5px #ff0055;
+        }
+
+        .btn-purple {
+            background: linear-gradient(45deg, #6600ff, #00edff);
+            color: white;
+            border: none;
+            padding: 13px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 10px rgba(102, 0, 255, 0.3);
+            transition: transform 0.1s, box-shadow 0.2s;
+        }
+
+        .btn-purple:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 15px rgba(0, 237, 255, 0.4);
+        }
+
+        /* МОДАЛЬНЫЕ ОКНА */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(11, 12, 16, 0.9);
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-content {
+            background: #11141a;
+            border: 2px solid #00edff;
+            padding: 35px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            box-shadow: 0 0 30px rgba(0, 237, 255, 0.2);
+            width: 550px;
+        }
+
+        .modal-delete-content {
+            border-color: #ff0055;
+            box-shadow: 0 0 30px rgba(255, 0, 85, 0.3);
+            text-align: center;
+            width: 450px;
+        }
+
+        .modal-content h4 {
+            color: #00edff;
+            text-align: center;
+            font-size: 22px;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(0, 237, 255, 0.4);
+        }
+
+        .modal-delete-content h4 {
+            color: #ff0055;
+            text-shadow: 0 0 10px rgba(255, 0, 85, 0.4);
+        }
+
+        .modal-delete-text {
+            font-size: 16px;
+            color: #fff;
+            line-height: 1.5;
+            margin: 10px 0;
+        }
+
+        .modal-content input {
+            padding: 14px;
+            background: #161b24;
+            border: 1px solid #1f232d;
+            color: white;
+            border-radius: 6px;
+            font-size: 16px;
+            width: 100%;
+        }
+        .modal-content input:focus {
+            outline: none;
+            border-color: #00edff;
+        }
+
+        .modal-content label {
+            font-size: 15px;
+            color: #6600ff;
+            margin-bottom: -10px;
+            font-weight: 500;
+        }
+
+        .mana-checkbox-list {
+            background: #161b24;
+            border: 1px solid #1f232d;
+            border-radius: 6px;
+            padding: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .mana-checkbox-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #11141a;
+            padding: 8px 12px;
+            border-radius: 4px;
+            border: 1px solid #1f232d;
+        }
+
+        .mana-left-side {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 15px;
+            color: white;
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .mana-left-side input {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: #00edff;
+        }
+
+        .mana-pts-input {
+            width: 80px !important;
+            padding: 6px 10px !important;
+            font-size: 14px !important;
+            text-align: center;
+            border-radius: 4px !important;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .modal-buttons button {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: background 0.2s;
+        }
+
+        .btn-confirm { background: #00edff; color: #0b0c10; }
+        .btn-confirm:hover { background: #00c8d4; box-shadow: 0 0 10px rgba(0, 240, 255, 0.4); }
+        
+        .btn-cancel { background: #161b24; color: #fff; border: 1px solid #1f232d; }
+        .btn-cancel:hover { background: #1f232d; }
+
+        .btn-delete-confirm { background: #ff0055; color: white; }
+        .btn-delete-confirm:hover { background: #e6004c; box-shadow: 0 0 10px rgba(255, 0, 85, 0.4); }
+
+        /* СИСТЕМНОЕ ОКНО УВЕДОМЛЕНИЯ (ПОЯВЛЯЕТСЯ НА 2 СЕКУНДЫ) */
+        .system-toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #11141a;
+            border: 2px solid #00edff;
+            border-radius: 6px;
+            padding: 15px 25px;
+            box-shadow: 0 0 20px rgba(0, 237, 255, 0.4);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            pointer-events: none;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: opacity 0.3s, transform 0.3s;
+        }
+
+        .system-toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .toast-header {
+            color: #00edff;
+            font-weight: bold;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-bottom: 1px solid rgba(0, 237, 255, 0.2);
+            padding-bottom: 4px;
+        }
+
+        .toast-body {
+            color: #fff;
+            font-size: 14px;
+            font-weight: 500;
+            margin-top: 4px;
+        }
+
+        .toast-reward-item {
+            color: #c5a1ff;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>SOLO LEVELING</h1>
+
+    <div class="main-content">
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 40%;">Список задач</th>
+                        <th>ПН</th>
+                        <th>ВТ</th>
+                        <th>СР</th>
+                        <th>ЧТ</th>
+                        <th>ПТ</th>
+                        <th>СБ</th>
+                        <th>ВС</th>
+                        <th style="width: 80px;"></th>
+                    </tr>
+                </thead>
+                <tbody id="task-table-body"></tbody>
+            </table>
+            <button class="add-task-btn" onclick="openTaskModal()">+</button>
+        </div>
+
+        <div class="calendar-section">
+            <div class="calendar-header">
+                <button class="calendar-nav-btn" onclick="changeMonth(-1)">←</button>
+                <h3 id="calendar-month-year">Месяц Год</h3>
+                <button class="calendar-nav-btn" onclick="changeMonth(1)">→</button>
+            </div>
+            <div class="calendar-grid" id="calendar-grid-days"></div>
+        </div>
+    </div>
+
+    <div class="sidebar">
+        <div class="sidebar-title">Сферы Маны</div>
+        <div class="mana-grid" id="mana-circles-container"></div>
+        <button class="btn-purple" onclick="openManaModal()">Добавить ману</button>
+    </div>
+</div>
+
+<div class="system-toast" id="system-notification">
+    <div class="toast-header">📢 Оповещение Системы</div>
+    <div class="toast-body" id="toast-message"></div>
+</div>
+
+<div class="modal" id="task-modal">
+    <div class="modal-content">
+        <h4>Добавить задачу</h4>
+        <input type="text" id="task-name-input" placeholder="Название задачи">
+        <label>Выберите сферы маны и укажите очки для каждой:</label>
+        <div class="mana-checkbox-list" id="task-mana-checkboxes"></div>
+        <div class="modal-buttons">
+            <button class="btn-confirm" onclick="addTask()">Добавить</button>
+            <button class="btn-cancel" onclick="closeModal('task-modal')">Отмена</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="edit-task-modal">
+    <div class="modal-content">
+        <h4>Изменить задачу</h4>
+        <input type="hidden" id="edit-task-id">
+        <label>Название задачи:</label>
+        <input type="text" id="edit-task-name-input">
+        <label>Настройка сфер маны и очков:</label>
+        <div class="mana-checkbox-list" id="edit-task-mana-checkboxes"></div>
+        <div class="modal-buttons">
+            <button class="btn-confirm" onclick="saveTaskChanges()">Сохранить изменения</button>
+            <button class="btn-cancel" onclick="closeModal('edit-task-modal')">Отмена</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="mana-modal">
+    <div class="modal-content">
+        <h4>Создать сферу маны</h4>
+        <input type="text" id="mana-name-input" placeholder="Название маны">
+        <div class="modal-buttons">
+            <button class="btn-confirm" onclick="createManaCircle()">Создать круг</button>
+            <button class="btn-cancel" onclick="closeModal('mana-modal')">Отмена</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="delete-mana-modal">
+    <div class="modal-content modal-delete-content">
+        <h4>Удаление сферы</h4>
+        <p class="modal-delete-text" id="delete-mana-confirmation-text">Вы уверены, что хотите ликвидировать эту сферу маны?</p>
+        <input type="hidden" id="delete-mana-target-name">
+        <div class="modal-buttons">
+            <button class="btn-delete-confirm" onclick="confirmDeleteManaCircle()">Удалить</button>
+            <button class="btn-cancel" onclick="closeModal('delete-mana-modal')">Отмена</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let manaStorage = JSON.parse(localStorage.getItem('SL_manaStorage')) || {};
+    let tasksArray = JSON.parse(localStorage.getItem('SL_tasksArray')) || [];
+    let completedDatesStorage = JSON.parse(localStorage.getItem('SL_completedDatesStorage')) || {}; 
+
+    let currentDate = new Date();
+    const monthsRu = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
+    const weekdaysRu = ["ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ", "ВС"];
+
+    window.onload = function() {
+        initManaCirclesDOM();
+        renderTaskTable();
+        renderCalendar();
+    };
+
+    function saveToLocalStorage() {
+        localStorage.setItem('SL_manaStorage', JSON.stringify(manaStorage));
+        localStorage.setItem('SL_tasksArray', JSON.stringify(tasksArray));
+        localStorage.setItem('SL_completedDatesStorage', JSON.stringify(completedDatesStorage));
+    }
+
+    // ФУНКЦИЯ ДЛЯ ПОКАЗА ОКНА НА 2 СЕКУНДЫ
+    function showSystemNotification(manaMap) {
+        const toast = document.getElementById('system-notification');
+        const messageContainer = document.getElementById('toast-message');
+        
+        let rewardText = 'Выполнено! Награда:<br>';
+        Object.keys(manaMap).forEach(manaName => {
+            rewardText += `<span class="toast-reward-item">+${manaMap[manaName]} Очков [${manaName}]</span><br>`;
+        });
+
+        messageContainer.innerHTML = rewardText;
+        toast.classList.add('show');
+
+        // Ровно через 2000мс (2 секунды) убираем окно
+        setTimeout(() => {
+            toast.classList.remove('show');
+        }, 2000);
+    }
+
+    function openTaskModal() { 
+        renderManaCheckboxes('task-mana-checkboxes');
+        document.getElementById('task-modal').style.display = 'flex'; 
+    }
+    function openManaModal() { document.getElementById('mana-modal').style.display = 'flex'; }
+    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+    function getCurrentWeekDates() {
+        const now = new Date(currentDate);
+        const day = now.getDay();
+        const diff = now.getDate() - day + (day === 0 ? -6 : 1);
+        const monday = new Date(now.setDate(diff));
+        
+        const weekDates = [];
+        for (let i = 0; i < 7; i++) {
+            const nextDay = new Date(monday);
+            nextDay.setDate(monday.getDate() + i);
+            weekDates.push(nextDay.toISOString().split('T')[0]);
+        }
+        return weekDates;
+    }
+
+    function renderTaskTable() {
+        const tbody = document.getElementById('task-table-body');
+        tbody.innerHTML = '';
+        const weekDates = getCurrentWeekDates();
+
+        tasksArray.forEach(task => {
+            const tr = document.createElement('tr');
+            tr.id = task.id;
+            
+            let rewardHTML = '';
+            const keys = Object.keys(task.manaMap);
+            if (keys.length > 0) {
+                rewardHTML = '<div class="task-reward-container">';
+                keys.forEach(m => { rewardHTML += `<span class="task-reward-tag">+${task.manaMap[m]} [${m}]</span>`; });
+                rewardHTML += '</div>';
+            }
+
+            let html = `<td class="task-name-cell task-name" data-rawname="${task.name}">${task.name} ${rewardHTML}</td>`;
+            const jsonString = encodeURIComponent(JSON.stringify(task.manaMap));
+
+            weekDates.forEach(dateStr => {
+                const isChecked = completedDatesStorage[dateStr] && completedDatesStorage[dateStr][task.id] ? 'checked' : '';
+                if (keys.length > 0) {
+                    html += `<td class="checkbox-cell">
+                        <input type="checkbox" class="task-cb" ${isChecked} data-date="${dateStr}" data-taskid="${task.id}" data-manadata="${jsonString}" onchange="handleTaskCheckboxChange(this)">
+                    </td>`;
+                } else {
+                    html += `<td class="checkbox-cell"><input type="checkbox" ${isChecked}></td>`;
+                }
+            });
+
+            html += `<td>
+                <button class="action-btn edit-btn" onclick="openEditTaskModal('${task.id}')">✎</button>
+                <button class="action-btn delete-btn" onclick="deleteTask('${task.id}')">×</button>
+            </td>`;
+
+            tr.innerHTML = html;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function changeMonth(direction) {
+        currentDate.setMonth(currentDate.getMonth() + direction);
+        renderCalendar();
+        renderTaskTable();
+    }
+
+    function renderCalendar() {
+        const grid = document.getElementById('calendar-grid-days');
+        const monthYearTitle = document.getElementById('calendar-month-year');
+        grid.innerHTML = '';
+
+        const year = currentDate.getFullYear();
+        const month = currentDate.getMonth();
+        monthYearTitle.innerText = `${monthsRu[month]} ${year}`;
+
+        weekdaysRu.forEach(day => {
+            const label = document.createElement('div');
+            label.className = 'weekday-label';
+            label.innerText = day;
+            grid.appendChild(label);
+        });
+
+        const firstDayIndex = new Date(year, month, 1).getDay();
+        const shift = firstDayIndex === 0 ? 6 : firstDayIndex - 1;
+        const totalDays = new Date(year, month + 1, 0).getDate();
+
+        for (let i = 0; i < shift; i++) {
+            const emptyCell = document.createElement('div');
+            emptyCell.className = 'calendar-day empty';
+            grid.appendChild(emptyCell);
+        }
+
+        const todayStr = new Date().toISOString().split('T')[0];
+
+        for (let day = 1; day <= totalDays; day++) {
+            const dayCell = document.createElement('div');
+            dayCell.className = 'calendar-day';
+            const curDateObj = new Date(year, month, day);
+            const dateStr = curDateObj.toISOString().split('T')[0];
+
+            if (dateStr === todayStr) { dayCell.classList.add('current-day'); }
+            dayCell.innerHTML = `<span>${day}</span>`;
+
+            const dayCompletedTasks = completedDatesStorage[dateStr];
+            if (dayCompletedTasks && Object.keys(dayCompletedTasks).length > 0) {
+                const dotsContainer = document.createElement('div');
+                dotsContainer.className = 'day-status-dots';
+                Object.keys(dayCompletedTasks).forEach(() => {
+                    const dot = document.createElement('div');
+                    dot.className = 'status-dot';
+                    dotsContainer.appendChild(dot);
+                });
+                dayCell.appendChild(dotsContainer);
+            }
+
+            dayCell.style.cursor = 'pointer';
+            dayCell.onclick = function() {
+                currentDate = curDateObj;
+                renderCalendar();
+                renderTaskTable();
+            };
+            grid.appendChild(dayCell);
+        }
+    }
+
+    function handleTaskCheckboxChange(checkbox) {
+        const dateStr = checkbox.getAttribute('data-date');
+        const taskId = checkbox.getAttribute('data-taskid');
+        const manaMap = JSON.parse(decodeURIComponent(checkbox.getAttribute('data-manadata')));
+
+        if (!completedDatesStorage[dateStr]) { completedDatesStorage[dateStr] = {}; }
+
+        if (checkbox.checked) {
+            completedDatesStorage[dateStr][taskId] = true;
+            Object.keys(manaMap).forEach(manaName => {
+                if (manaStorage[manaName]) {
+                    manaStorage[manaName].value = Math.min(manaStorage[manaName].max, manaStorage[manaName].value + parseInt(manaMap[manaName]));
+                    refreshCircleDOM(manaName);
+                }
+            });
+            // Показываем триггер системного окна при выполнении
+            showSystemNotification(manaMap);
+        } else {
+            delete completedDatesStorage[dateStr][taskId];
+            Object.keys(manaMap).forEach(manaName => {
+                if (manaStorage[manaName]) {
+                    manaStorage[manaName].value = Math.max(0, manaStorage[manaName].value - parseInt(manaMap[manaName]));
+                    refreshCircleDOM(manaName);
+                }
+            });
+        }
+        saveToLocalStorage();
+        renderCalendar();
+    }
+
+    function renderManaCheckboxes(containerId, selectedManasMap = {}) {
+        const container = document.getElementById(containerId);
+        container.innerHTML = '';
+        const manaKeys = Object.keys(manaStorage);
+        
+        if (manaKeys.length === 0) {
+            container.innerHTML = '<div style="color: #6600ff; font-size: 14px;">Сначала создайте сферы маны.</div>';
+            return;
+        }
+
+        manaKeys.forEach(manaName => {
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'mana-checkbox-item';
+
+            const leftSide = document.createElement('label');
+            leftSide.className = 'mana-left-side';
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.className = 'mana-select-cb';
+            checkbox.value = manaName;
+
+            if (selectedManasMap[manaName] !== undefined) { checkbox.checked = true; }
+
+            leftSide.appendChild(checkbox);
+            leftSide.appendChild(document.createTextNode(manaName));
+
+            const ptsInput = document.createElement('input');
+            ptsInput.type = 'number';
+            ptsInput.className = 'mana-pts-input';
+            ptsInput.min = '1';
+            ptsInput.value = selectedManasMap[manaName] !== undefined ? selectedManasMap[manaName] : '10';
+            ptsInput.oninput = function() { checkbox.checked = true; };
+
+            itemDiv.appendChild(leftSide);
+            itemDiv.appendChild(ptsInput);
+            container.appendChild(itemDiv);
+        });
+    }
+
+    function getSelectedManasData(containerId) {
+        const items = document.querySelectorAll(`#${containerId} .mana-checkbox-item`);
+        const result = {};
+        items.forEach(item => {
+            const cb = item.querySelector('.mana-select-cb');
+            const ptsInp = item.querySelector('.mana-pts-input');
+            if (cb && cb.checked) {
+                result[cb.value] = parseInt(ptsInp.value) || 10;
+            }
+        });
+        return result;
+    }
+
+    function addTask() {
+        const nameInput = document.getElementById('task-name-input');
+        const name = nameInput.value.trim();
+        const selectedManaData = getSelectedManasData('task-mana-checkboxes');
+
+        if (!name) return;
+
+        const id = 'task-' + Date.now();
+        tasksArray.push({ id, name, manaMap: selectedManaData });
+
+        nameInput.value = '';
+        closeModal('task-modal');
+        saveToLocalStorage();
+        renderTaskTable();
+    }
+
+    function openEditTaskModal(taskId) {
+        const task = tasksArray.find(t => t.id === taskId);
+        if (!task) return;
+
+        renderManaCheckboxes('edit-task-mana-checkboxes', task.manaMap);
+        document.getElementById('edit-task-id').value = taskId;
+        document.getElementById('edit-task-name-input').value = task.name;
+        document.getElementById('edit-task-modal').style.display = 'flex';
+    }
+
+    function saveTaskChanges() {
+        const taskId = document.getElementById('edit-task-id').value;
+        const task = tasksArray.find(t => t.id === taskId);
+        if (!task) return;
+
+        const newName = document.getElementById('edit-task-name-input').value.trim();
+        const newManaData = getSelectedManasData('edit-task-mana-checkboxes');
+
+        if (!newName) return;
+
+        Object.keys(completedDatesStorage).forEach(dateStr => {
+            if (completedDatesStorage[dateStr][taskId]) {
+                Object.keys(task.manaMap).forEach(m => {
+                    if (manaStorage[m]) {
+                        manaStorage[m].value = Math.max(0, manaStorage[m].value - task.manaMap[m]);
+                        refreshCircleDOM(m);
+                    }
+                });
+                Object.keys(newManaData).forEach(m => {
+                    if (manaStorage[m]) {
+                        manaStorage[m].value = Math.min(manaStorage[m].max, manaStorage[m].value + newManaData[m]);
+                        refreshCircleDOM(m);
+                    }
+                });
+            }
+        });
+
+        task.name = newName;
+        task.manaMap = newManaData;
+
+        closeModal('edit-task-modal');
+        saveToLocalStorage();
+        renderTaskTable();
+    }
+
+    function deleteTask(taskId) {
+        const index = tasksArray.findIndex(t => t.id === taskId);
+        if (index === -1) return;
+
+        Object.keys(completedDatesStorage).forEach(dateStr => {
+            if (completedDatesStorage[dateStr][taskId]) {
+                const task = tasksArray[index];
+                Object.keys(task.manaMap).forEach(manaName => {
+                    if (manaStorage[manaName]) {
+                        manaStorage[manaName].value = Math.max(0, manaStorage[manaName].value - task.manaMap[manaName]);
+                        refreshCircleDOM(manaName);
+                    }
+                });
+                delete completedDatesStorage[dateStr][taskId];
+            }
+        });
+
+        tasksArray.splice(index, 1);
+        saveToLocalStorage();
+        renderTaskTable();
+        renderCalendar();
+    }
+
+    function initManaCirclesDOM() {
+        const container = document.getElementById('mana-circles-container');
+        container.innerHTML = '';
+        Object.keys(manaStorage).forEach(name => {
+            appendManaCircleToDOM(name);
+            refreshCircleDOM(name);
+        });
+    }
+
+    function appendManaCircleToDOM(name) {
+        const container = document.getElementById('mana-circles-container');
+        const encodedId = btoa(encodeURIComponent(name));
+
+        const wrapper = document.createElement('div');
+        wrapper.className = 'mana-circle-wrapper';
+        wrapper.id = `mana-wrapper-${encodedId}`;
+
+        wrapper.innerHTML = `
+            <div class="progress-circle" id="circle-${encodedId}">
+                <span class="circle-number" id="num-${encodedId}">0</span>
+            </div>
+            <div class="circle-label">${name}</div>
+            <button class="delete-mana-btn" onclick="openDeleteManaModal('${name}')">Удалить</button>
+        `;
+        container.appendChild(wrapper);
+    }
+
+    function createManaCircle() {
+        const nameInput = document.getElementById('mana-name-input');
+        const name = nameInput.value.trim();
+
+        if (!name || manaStorage[name]) { return; }
+
+        manaStorage[name] = { value: 0, max: 10000 };
+        appendManaCircleToDOM(name);
+        refreshCircleDOM(name);
+
+        nameInput.value = '';
+        closeModal('mana-modal');
+        saveToLocalStorage();
+    }
+
+    function openDeleteManaModal(name) {
+        document.getElementById('delete-mana-target-name').value = name;
+        document.getElementById('delete-mana-confirmation-text').innerText = `Вы уверены, что хотите ликвидировать сферу маны "${name}"? Это действие необратимо.`;
+        document.getElementById('delete-mana-modal').style.display = 'flex';
+    }
+
+    function confirmDeleteManaCircle() {
+        const name = document.getElementById('delete-mana-target-name').value;
+        if (manaStorage[name]) {
+            delete manaStorage[name];
+            const encodedId = btoa(encodeURIComponent(name));
+            const wrapper = document.getElementById(`mana-wrapper-${encodedId}`);
+            if (wrapper) wrapper.remove();
+            
+            tasksArray.forEach(task => {
+                if (task.manaMap[name] !== undefined) {
+                    delete task.manaMap[name];
+                }
+            });
+        }
+        closeModal('delete-mana-modal');
+        saveToLocalStorage();
+        renderTaskTable();
+    }
+
+    function refreshCircleDOM(manaName) {
+        if (!manaStorage[manaName]) return;
+        const encodedId = btoa(encodeURIComponent(manaName));
+        const numSpan = document.getElementById(`num-${encodedId}`);
+        const circle = document.getElementById('circle-' + encodedId);
+
+        if (numSpan && circle) {
+            numSpan.innerText = manaStorage[manaName].value;
+            const percent = (manaStorage[manaName].value / manaStorage[manaName].max) * 100;
+            const degrees = (percent / 100) * 360;
+            circle.style.background = `conic-gradient(#00edff ${degrees}deg, #161b24 ${degrees}deg)`;
+        }
+    }
+</script>
+
+</body>
+</html>
